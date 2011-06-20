@@ -20,7 +20,7 @@ Ext.setup({
 		
 		var onFieldChange = function(cmp, value) {
 			console.log(value);
-		}
+		};
 		
 		var listeners = {
 			change: onFieldChange,
@@ -36,7 +36,7 @@ Ext.setup({
 					items : [
 						{
 							xtype        : "multiselectfield",
-							label        : "List",
+							label        : "List (value as csv)",
 							store        : store,
 							displayField : "text",
 							valueField   : "value",
@@ -47,30 +47,15 @@ Ext.setup({
 						},
 						{
 							xtype        : "multiselectfield",
-							label        : "DataView",
+							label        : "List (value as array)",
 							store        : store,
 							displayField : "text",
 							valueField   : "value",
-							name         : "multiselect-dataview",
+							name         : "multiselect-list",
 							itemWidth    : 400,
-							itemType     : "dataview",
+							itemType     : "list",
+							returnType   : "array",  
 							listeners    : listeners
-						},
-						{
-							xtype        : "multiselectfield",
-							label        : "Picker**",
-							store        : store,
-							displayField : "text",
-							valueField   : "value",
-							name         : "multiselect-picker",
-							itemWidth    : 400,
-							itemType     : "picker",
-							listeners    : listeners
-						},
-						{
-							xtype: "textareafield",
-							disabled: true,
-							value: "**Picker version of the Ext.form.ux.touch.MultiSelect component does not support multiselect at this time."
 						}
 					]
 				}
