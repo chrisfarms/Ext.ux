@@ -160,7 +160,6 @@ Ext.form.ux.touch.MultiSelect = Ext.extend(Ext.form.Select, {
             var valuesLen = values.length;
             for (var i = 0; i < valuesLen; i++) {
                 idx = store.findExact(this.valueField, values[i]);
-                console.log("findExact", this.valueField, values[i], idx);
                 if (idx < 0) {
                     idx = store.find(this.valueField, values[i]);
                 }
