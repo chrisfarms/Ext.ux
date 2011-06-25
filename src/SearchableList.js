@@ -104,7 +104,7 @@ Ext.ux.SearchableList = Ext.extend(Ext.Panel,{
         'itemtap': function(record){ // just the default listener override it
             this.record = record;
             Ext.dispatch({
-                controller: this.tplName+"s",
+                controller: this.controller || this.tplName+"s",
                 action: 'show',
                 record: record
             });
