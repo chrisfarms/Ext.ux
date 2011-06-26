@@ -12,6 +12,9 @@ Ext.ux.TokenField = Ext.extend(Ext.form.Text,  {
     // on the token bubble element
     largeTapArea: false,
     
+    // the min size the input box can be
+    minInputWidth: 60,
+    
     tokenTpl: [
         '<tpl for="tokens">',
             '<a class="ux-token" data-idx="{#}">',
@@ -61,12 +64,14 @@ Ext.ux.TokenField = Ext.extend(Ext.form.Text,  {
     getInputValue: function(){
         if(this.fieldEl)
             return this.fieldEl.dom.value.trim();
+        return '';
     },
     
     appendToken: function(){        
-        var token = this.getInputValue();
-        if(token)
-            this.getData().push(token.replace(/,$/,'').trim());
+        var token = this.getInputValue().replace(/,$/,'').trim();
+        if(token){
+            this.getData().push(token);
+        }
         this.updateTokenTpl();
     },
     
@@ -75,17 +80,28 @@ Ext.ux.TokenField = Ext.extend(Ext.form.Text,  {
     },
     
     updateTokenTpl: function(){
-        if(this.fieldEl && this.el && this.el.dom)
+        if(this.fieldEl && this.el && this.el.dom){
+            // shrink the input box 
+            var curValue = this.fieldEl.dom.value;
+            this.fieldEl.dom.value = '';
+            this.fieldEl.setWidth( this.minInputWidth );
+            // re-render
             this.tokenTpl.overwrite(this.el.down('.ux-tokens'), {tokens:this.getData()});
+            // enlarge the input box and return it's value
+            this.resizeInput();
+            this.fieldEl.dom.value = curValue;
+        }
     },
     
-    // dynamically resize input width to fit word
+    // dynamically resize input width to fit remaining space
     // well... try to anyway
     resizeInput: function(){
+        console.log('resize', this.fieldEl);
         if(!this.fieldEl)
             return;
-        var w = this.fieldEl.dom.value.length*14;
-        this.fieldEl.setStyle('width', (w<75 ? 75 : w)+'px');        
+        var offsetLeft = this.fieldEl.getOffsetsTo(this.el.down('.ux-token-field-container'))[0];
+        var w = this.el.down('.ux-token-field-container').getWidth() - offsetLeft -10;
+        this.fieldEl.setWidth( w<this.minInputWidth ? this.minInputWidth : w);
     },
     
     onChangeInput: function(input, e){
@@ -106,7 +122,6 @@ Ext.ux.TokenField = Ext.extend(Ext.form.Text,  {
             this.appendToken();
             this.clearInput();
         }
-        this.resizeInput();
         this.preventRemoveToken = true;
     },
     
@@ -125,10 +140,6 @@ Ext.ux.TokenField = Ext.extend(Ext.form.Text,  {
             idx = token.getAttribute('data-idx');
             this.removeToken(parseInt(idx-1,10));            
         }
-        // defer this otherwise iOS will cancel the tap event
-        Ext.defer(function(){
-            this.focus();
-        },10,this);
     },
     
     initRenderData: function() {
@@ -158,6 +169,7 @@ Ext.ux.TokenField = Ext.extend(Ext.form.Text,  {
         this.on('keyup',this.onChangeInput);
         // 
         this.on('singletap',this.onFieldTap, this, {element:"el"});
+        this.on('afterRender',this.resizeInput, this);
     }
 });
 
