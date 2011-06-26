@@ -67,10 +67,17 @@ Ext.ux.TokenField = Ext.extend(Ext.form.Text,  {
         return '';
     },
     
+    // if multiple tokens are found in the input then they are split up
+    // and each added
     appendToken: function(){        
         var token = this.getInputValue().replace(/,$/,'').trim();
         if(token){
-            this.getData().push(token);
+            var tokens = token.split(this.tokenSeperator);
+            for (var i=0; i < tokens.length; i++) {
+                token = tokens[i].trim();
+                if(token)
+                    this.getData().push(token);
+            }
         }
         this.updateTokenTpl();
     },
