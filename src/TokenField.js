@@ -103,7 +103,6 @@ Ext.ux.TokenField = Ext.extend(Ext.form.Text,  {
     // dynamically resize input width to fit remaining space
     // well... try to anyway
     resizeInput: function(){
-        console.log('resize', this.fieldEl);
         if(!this.fieldEl)
             return;
         var offsetLeft = this.fieldEl.getOffsetsTo(this.el.down('.ux-token-field-container'))[0];
